@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+for game in "$@"; do
+	file=~/Downloads/$game
+
+	if [[ $file =~ \.zip$ ]] || [[ $file =~ \.rar$ ]]; then
+		mv $file ~/games/ziprarFiles
+		file=~/games/ziprarFiles/$game
+	else
+		echo "incorrect file type for games"
+	fi
+
+
+	if [[ $game =~ \.zip$ ]] then
+		unzip $file -d ~/games/exeFiles 
+	elif [[ $game =~ \.rar$ ]] then
+		rar x $file ~/games/exeFiles	
+	fi
+done
