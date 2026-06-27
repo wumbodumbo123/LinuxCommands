@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+typeOfFile=$1
+nameOfFile=$2
+
+touch hello.txt
+if [[ ${typeOfFile,,} == "zip" ]] then
+	if [ -z "$2" ]; then
+		zip hello.zip hello.txt
+	else
+		zip $2.zip hello.txt
+	fi
+elif [[ ${typeOfFile,,} == "rar" ]] then
+	if [ -z "$2" ]; then
+		rar a hello.rar hello.txt
+	else
+		rar a $2.rar hello.txt
+	fi
+elif [[ ${typeOfFile,,} == "7z" ]] then
+	if [ -z "$2" ]; then
+		7z a hello.7z hello.txt
+	else
+		7z a $2.7z hello.txt
+	fi
+else
+	echo "unsupported file type"
+	exit 1
+fi
+
+rm hello.txt

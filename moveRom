@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+file=$2
+fileLocation=~/Downloads/$2
+device=$1
+
+moveCompressedFile() {
+	local Location=$1
+	mv "$Location" ~/Roms/.compressedRoms
+}
+
+if [[ "$file" =~ \.zip$ ]] then
+	unzip "$fileLocation" -d ~/Roms/${device^^}
+	moveCompressedFile "$fileLocation"
+elif [[ "$file" =~ \.rar$ ]] then
+	unrar x "$fileLocation" ~/Roms/${device^^}
+	moveCompressedFile "$fileLocation"
+elif [[ "$file" =~ \.7z$ ]] then
+	7z x "$fileLocation" -o"$HOME/Roms/${device^^}"
+	moveCompressedFile "$fileLocation"
+else
+	echo "unsuported file type"
+fi
