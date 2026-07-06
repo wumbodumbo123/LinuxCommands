@@ -4,7 +4,7 @@ for game in "$@"; do
 	file=~/Downloads/$game
 
 	if [[ $file =~ \.zip$ ]] || [[ $file =~ \.rar$ ]]; then
-		mv $file ~/games/ziprarFiles
+		mv "$file" ~/games/ziprarFiles
 		file=~/games/ziprarFiles/$game
 	else
 		echo "incorrect file type for games"
@@ -12,8 +12,10 @@ for game in "$@"; do
 
 
 	if [[ $game =~ \.zip$ ]] then
-		unzip $file -d ~/games/exeFiles 
+		unzip "$file" -d ~/games/exeFiles 
 	elif [[ $game =~ \.rar$ ]] then
-		rar x $file ~/games/exeFiles	
+		rar x "$file" ~/games/exeFiles	
+	elif [[ $game =~ \.7z$ ]] then
+		7z x "$file" -o"$HOME/exeFiles"
 	fi
 done
