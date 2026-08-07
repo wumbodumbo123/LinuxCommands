@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+. ~/Documents/LinuxCommands/Learning/lib/greetings
+
+greet dave
+greet wumbo

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+filename='myFile'
+echo "$filename."{txt,jpg,mov}
+

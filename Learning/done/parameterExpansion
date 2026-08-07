@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+name=${1:?'No name given'}
+
+echo "hello $name !"
+
+echo "done"
