@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+datePlaceholder=null
+name=null
+Date=null
+
+getName() {
+	local name="$(printf "${1%%-*}")"
+	echo "$name"
+}
+
+getDate() {
+	local datePlaceholder="$(printf "${1#*-}")"
+	local Date="$(printf "${datePlaceholder%.*}" | xargs echo)"
+	echo "$Date"
+}
+
+for f in ./images/*; do
+
+	fileName="$(basename "${f}")"
+
+	name="$(getName "${fileName}")"
+	Date="$(getDate "${fileName}")"
+	
+	echo "${Date}: ${name}"
+done
