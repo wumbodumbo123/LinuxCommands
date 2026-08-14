@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+array=(0 1 2 3 4 5 6 7 8)
+character=(0 0 0 0 0 0 0 0 0)
+startCharacter=(1 2 3 4 5 6 7 8 9)
+gridSize=3
+first=0
+player=1
+win=1
+
+grid() {
+	picker() {
+		if [[ $first == 0 ]]; then
+			printf ${startCharacter[$(($1 + $2))]}
+		else
+			printf ${character[$(($1 + $2))]}
+		fi
+
+	}
+
+	for x in "${array[@]}"; do
+		if [[ $(( $x % 3 )) == 0 ]]; then
+			for (( i = 0; i < gridSize; i++)) do
+				printf "| "
+				picker $x $i
+				printf " |"	
+			done
+
+			printf "\n"
+		fi
+
+	done
+	first=1
+}
+
+playLoop() {
+	if [[ $player == 1 ]]; then
+		read -p "Player 1 (1-9): " playPoint
+		player=-1
+		character[$(( $playPoint - 1))]="X"
+	elif [[ $player == -1 ]]; then
+		read -p "Player 2 (1-9): " playPoint
+		player=1 
+		character[$(( $playPoint - 1))]="O"
+	fi
+
+}
+
+while [[ $win == 1 ]]; do
+	grid
+	playLoop
+done
