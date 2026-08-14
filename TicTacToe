@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-array=(0 1 2 3 4 5 6 7 8)
 character=(0 0 0 0 0 0 0 0 0)
 startCharacter=(1 2 3 4 5 6 7 8 9)
 gridSize=3
 first=0
 player=1
 win=1
+
+iteration=0
 
 grid() {
 	picker() {
@@ -18,11 +19,11 @@ grid() {
 
 	}
 
-	for x in "${array[@]}"; do
-		if [[ $(( $x % 3 )) == 0 ]]; then
+	for x in "${startCharacter[@]}"; do
+		if [[ $(( $(( $x - 1))  % 3 )) == 0 ]]; then
 			for (( i = 0; i < gridSize; i++)) do
 				printf "| "
-				picker $x $i
+				picker $(( $x - 1 ))  $i
 				printf " |"	
 			done
 
@@ -43,10 +44,39 @@ playLoop() {
 		player=1 
 		character[$(( $playPoint - 1))]="O"
 	fi
+}
 
+winLoop() {
+	for x in "${startCharacter[@]}"; do
+		iteration=$(( $iteration + 1 ))
+		if [[ $(( $(( $x - 1 ))  % 3 )) == 0 ]]; then
+			local a=${character[$(( $x - 1 ))]}
+			local b=${character[$(( $x ))]}
+			local c=${character[$(( $x + 1 ))]}
+
+			if [[ $a == 0 ]] || [[ $b == 0 ]] || [[ $c == 0 ]]; then
+				continue
+			elif [[ $a == $b ]] && [[ $a == $c ]]; then
+				win=0
+			fi
+		fi
+
+		if [[ $(( $x - 1 )) -lt 3 ]]; then
+			local a=${character[$(( $x - 1))]}
+			local b=${character[$(( $x + 2))]}
+			local c=${character[$(( $x + 5 ))]}
+
+			if [[ $a == 0 ]] || [[ $b == 0 ]] || [[ $c == 0 ]]; then
+				continue
+			elif [[ $a == $b ]] && [[ $b == $a ]]; then
+				win=0
+			fi
+		fi
+	done
 }
 
 while [[ $win == 1 ]]; do
 	grid
 	playLoop
+	winLoop
 done
