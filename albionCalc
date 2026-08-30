@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+checkNumber() {
+	if [[ $(($1 + 1)) == 1 ]]; then
+		if ! [[ "$1" == 0 ]]; then
+			echo 'incorrect input'
+			exit 20
+		fi
+	fi
+}
+
+read -p "what is the goal fame " fameGoal
+checkNumber "$fameGoal"
+
+read -p "what is the fame already aquired " fameGot
+checkNumber "$fameGot"
+
+read -p "what are your farming (log, ore, fiber, hide, stone)" item
+
+clear
+
+fameGoal=$((fameGoal - fameGot))
+checkNumber "$fameGoal"
+
+while IFS=, read -r tier log ore fiber hide stone fame; do
+	required=$(( fameGoal / fame ))
+	if ! [[ $(( fameGoal % fame )) == 0 ]]; then
+		required=$((required + 1))
+	fi
+	
+	case "$item" in
+		log)
+			echo "$tier: amount required $log $required"
+			;;
+		ore)
+			echo "$tier: amount required $ore $required"
+			;;
+		fiber)
+			echo "$tier: amount required $fiber $required"
+			;;
+		hide)
+			echo "$tier: amount required $hide $required"
+			;;
+		stone)
+			echo "$tier: amount required $stone $required"
+			;;
+	esac
+done < ~/MyCommands/LinuxCommands/dict/albion/albionGathering
