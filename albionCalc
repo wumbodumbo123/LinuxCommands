@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. ./lib/check
+. ~/MyCommands/LinuxCommands/lib/check
 
 usage() {
 	echo "
