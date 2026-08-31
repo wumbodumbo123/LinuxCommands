@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+checkNumber() {
+	if [[ $(($1 + 1)) == 1 ]]; then
+		if ! [[ "$1" == 0 ]]; then
+			echo 'incorrect input'
+			exit 20
+		fi
+	fi
+}
+
+
+if ! (return 2>/dev/null); then
+	echo "running in main shell"
+fi

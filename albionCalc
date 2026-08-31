@@ -1,23 +1,39 @@
 #!/usr/bin/env bash
 
-checkNumber() {
-	if [[ $(($1 + 1)) == 1 ]]; then
-		if ! [[ "$1" == 0 ]]; then
-			echo 'incorrect input'
-			exit 20
-		fi
-	fi
+. ./lib/check
+
+usage() {
+	echo "
+${0} [-h|-g|-f|-t]
+	
+	-h prints this help
+	-g fame goal
+	-f fame aquired
+	-t type of material (log, ore, fiber, hide, stone)
+"
 }
 
-read -p "what is the goal fame " fameGoal
-checkNumber "$fameGoal"
-
-read -p "what is the fame already aquired " fameGot
-checkNumber "$fameGot"
-
-read -p "what are your farming (log, ore, fiber, hide, stone)" item
-
-clear
+while getopts ':hg:f:t:' option; do
+	case $option in
+		h) 
+			usage; exit 0
+			;;
+		g)
+			fameGoal=$OPTARG
+			checkNumber "$fameGoal"
+			;;
+		f)
+			fameGot=$OPTARG
+			checkNumber "$fameGot"
+			;;
+		t)
+			item=$OPTARG
+			;;
+		?)
+			usage; exit 0
+			;;
+	esac
+done
 
 fameGoal=$((fameGoal - fameGot))
 checkNumber "$fameGoal"
