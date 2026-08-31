@@ -35,6 +35,10 @@ while getopts ':hg:f:t:' option; do
 	esac
 done
 
+if [[ -z $1 ]]; then
+	usage
+fi
+
 fameGoal=$((fameGoal - fameGot))
 checkNumber "$fameGoal"
 
