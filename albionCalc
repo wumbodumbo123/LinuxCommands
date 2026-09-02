@@ -2,18 +2,51 @@
 
 . ~/MyCommands/LinuxCommands/lib/check
 
+premium=false
+food=0
+
+# help message
 usage() {
 	echo "
-${0} [-h|-g|-f|-t]
+${0} [-h|-p|-f|-g|-a|-t]
 	
 	-h prints this help
+	-p premium
+	-f food (T7, T7.1, T7.2, T7.3)
 	-g fame goal
-	-f fame aquired
+	-a fame aquired
 	-t type of material (log, ore, fiber, hide, stone)
 "
 }
 
-while getopts ':hg:f:t:' option; do
+# percentage bonus
+bonus() {
+	# $1 is fame
+	
+	newFame=$1
+
+	if $premium ; then
+		newFame=$(echo "scale=4; $newFame * 1.5" | bc)
+	fi
+
+	case $food in
+		"T7") 
+			newFame=$(echo "scale=4; $newFame * 1.15" | bc)
+			;;
+		"T7.1")
+			newFame=$(echo "scale=4; $newFame * 1.1725" | bc)
+			;;
+		"T7.2")
+			newFame=$(echo "scale=4; $newFame * 1.195" | bc)
+			;;
+		"T7.3")
+			newFame=$(echo "scale=4; $newFame * 1.225" | bc)
+			;;
+	esac
+}
+
+# All flags for albionCalc
+while getopts ':hpf:g:a:t:' option; do
 	case $option in
 		h) 
 			usage; exit 0
@@ -22,12 +55,18 @@ while getopts ':hg:f:t:' option; do
 			fameGoal=$OPTARG
 			checkNumber "$fameGoal"
 			;;
-		f)
+		a)
 			fameGot=$OPTARG
 			checkNumber "$fameGot"
 			;;
 		t)
 			item=$OPTARG
+			;;
+		p)
+			premium=true
+			;;
+		f)
+			food=$OPTARG
 			;;
 		?)
 			usage; exit 0
@@ -35,19 +74,25 @@ while getopts ':hg:f:t:' option; do
 	esac
 done
 
+# check if no flags are given
 if [[ -z $1 ]]; then
 	usage
+	exit 1
 fi
 
+# Calc
 fameGoal=$((fameGoal - fameGot))
 checkNumber "$fameGoal"
 
+# Sorter for what tier item and amount needed
 while IFS=, read -r tier log ore fiber hide stone fame; do
-	required=$(( fameGoal / fame ))
-	if ! [[ $(( fameGoal % fame )) == 0 ]]; then
-		required=$((required + 1))
+	bonus $fame
+	required=$( echo "scale=0; $fameGoal / $newFame" | bc)
+	remainder=$( echo "scale=4; $fameGoal % $newFame" | bc)
+	if ! [[ $remainder == 0 ]]; then
+		required=$(echo "scale=0; $required + 1" | bc)
 	fi
-	
+
 	case "$item" in
 		log)
 			echo "$tier: amount required $log $required"

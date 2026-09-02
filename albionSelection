@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+usage() {
+echo "
+${0} [-h|-g]
+	
+	-h prints this message
+	-g gathering calc
+
+"
+}
+
+albionCalcGathering() {
+	read -p "what input would you like for albion calc -h for help " input
+	clear
+	albionCalc $input
+}
+
+albinoCalcCrafting() {
+	read -p "what input would you like for albion calc -h for help " input
+	clear
+#	albionCrafting $input
+}
+
+if [[ -z "$@" ]]; then 
+	usage
+	exit 1
+fi
+
+while getopts ":hgc" opts; do
+	case $opts in
+		h)
+			usage; exit 0
+			;;
+		g)
+			albionCalcGathering
+			;;
+		c)
+			albionCalcCrafting	
+			;;
+		?)
+			usage; exit 0
+			;;
+	esac
+done
+
+
