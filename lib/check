@@ -10,6 +10,17 @@ checkNumber() {
 }
 
 
+#checkAlbionTier() {
+#
+#	check="${1}"
+#	shift 2
+#	for (( i = 0; 1 < ${#}); i++ ); do
+#
+#		if [[ "${$i}" == $ ]] || 	
+#	done
+#
+#}
+
 if ! (return 2>/dev/null); then
 	echo "running in main shell"
 fi
