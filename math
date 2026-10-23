@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+
+usage() {
+echo "
+	[h|s|a|m|d|r]
+
+	h help
+	s subtractor
+	a add
+	m multiply
+	d divisor
+	
+	r amount of numbers
+"
+}
+
+recursive=0
+total=1
+
+square() {
+	echo "scale=4; $1 * $1" | bc
+}
+
+subtraction() {
+	if [[ $recursive -eq 0 ]]; then
+		shift 2
+		recursive=1 
+	else
+		shift 4
+	fi
+
+	for (( i=1; i <= $recursive; i++)); do
+		echo "scale=4; $1 - $subtractor" | bc
+		shift
+
+		if [[ square 
+	done
+}
+
+add() {
+	shift 2
+	
+	total=0
+
+	for (( i=1; i <= $numbers; i+=2 )); do
+		if [[ $2 -eq 0 ]]; then
+			local count=$1
+		else
+			local count=$(echo "scale=4; $1 + $2" | bc)
+		fi
+
+		local total=$(echo "scale=4; $total + $count" | bc)
+		shift 2
+	done
+
+	echo $total
+}
+
+multiply() {
+	shift 2
+
+	for (( i=1; i <= $numbers; i+=2 )); do
+		if [[ $2 -eq 0 ]]; then
+			local count=$1
+		else
+			local count=$(echo "scale=4; $1 * $2" | bc)
+		fi
+
+		local total=$(echo "scale=4; $total * $count" | bc)
+		shift 2
+	done
+
+	echo $total
+}
+
+division() {
+
+	if [[ $recursive -eq 0 ]]; then
+		shift 2
+		recursive=1
+	else
+		shift 4
+	fi
+
+	for (( i=1; i <= $recursive; i++)); do
+		echo "scale=4; $1 / $diviser" | bc
+		shift
+	done
+}
+
+while getopts ":s:a:m:d:p:r:" options; do
+	case $options in
+		h)
+			usage
+			;;
+		s)
+			subtractor=$OPTARG
+			subtraction $@
+			;;
+		a)
+			numbers=$OPTARG
+			add $@
+			;;
+		m)
+			numbers=$OPTARG
+			multiply $@
+			;;
+		d)	
+			diviser=$OPTARG
+			division $@
+			;;
+		r)
+			recursive=$OPTARG
+			;;
+		p)
+			power=$OPTARG
+			;;
+		?)
+			usage
+			;;
+	esac
+done
